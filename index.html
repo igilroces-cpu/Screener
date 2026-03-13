@@ -4,245 +4,207 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ResearchDesk — Equity Screener</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:       #07090e;
-    --s1:       #0d1019;
-    --s2:       #0b0e16;
-    --s3:       #111622;
-    --border:   #161d2b;
-    --border2:  #1e2738;
-    --text:     #dde4f0;
-    --muted:    #4e5f78;
-    --dim:      #2d3a4e;
-    --accent:   #00d4a8;
-    --blue:     #1a9fff;
-    --red:      #ff3f62;
-    --yellow:   #f5c832;
-    --purple:   #a87ef5;
-    --gold:     #ffc832;
-    --silver:   #b4c8dc;
-    --bronze:   #c88c50;
+    --bg:      #f5f7fa;
+    --surface: #ffffff;
+    --surface2:#f0f2f7;
+    --border:  #e2e6ef;
+    --border2: #cdd3e0;
+    --text:    #1a2030;
+    --muted:   #7a8499;
+    --dim:     #b0b8cc;
+    --accent:  #0ea875;
+    --blue:    #2563eb;
+    --red:     #e63154;
+    --yellow:  #d4900a;
+    --purple:  #7c3aed;
+    --gold:    #c8950a;
+    --silver:  #6b7a99;
+    --bronze:  #a06030;
   }
-
   * { margin:0; padding:0; box-sizing:border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    min-height: 100vh;
-    overflow-x: auto;
-  }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; overflow-x:auto; }
 
   header {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(7,9,14,0.94);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border2);
-    padding: 0 36px;
-    height: 58px;
-    display: flex; align-items: center; justify-content: space-between;
+    position:sticky; top:0; z-index:200;
+    background:rgba(255,255,255,0.97); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    padding:0 32px; height:56px;
+    display:flex; align-items:center; justify-content:space-between;
+    box-shadow:0 1px 4px rgba(0,0,0,0.06);
   }
+  .logo { font-weight:700; font-size:17px; letter-spacing:-.3px; }
+  .logo em { color:var(--accent); font-style:normal; }
+  .header-right { display:flex; align-items:center; gap:10px; }
+  .badge { font-size:10px; letter-spacing:.06em; text-transform:uppercase; padding:3px 9px; border-radius:20px; font-weight:600; }
+  .badge-live { background:rgba(14,168,117,.12); color:var(--accent); border:1px solid rgba(14,168,117,.25); }
+  .badge-n    { background:var(--surface2); color:var(--muted); border:1px solid var(--border); }
+  .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--accent); margin-right:5px; animation:blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 19px; letter-spacing: -.3px; }
-  .logo em { color: var(--accent); font-style: normal; }
-
-  .header-right { display: flex; align-items: center; gap: 12px; }
-
-  .badge { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; font-weight: 500; }
-  .badge-live { background: rgba(0,212,168,.1); color: var(--accent); border: 1px solid rgba(0,212,168,.22); }
-  .badge-n    { background: rgba(255,255,255,.04); color: var(--muted); border: 1px solid var(--border2); }
-  .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--accent); margin-right:5px; animation: blink 2s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
-
-  .wrap { padding: 20px 36px 60px; overflow-x: auto; }
-
-  table { width: 100%; border-collapse: collapse; min-width: 1500px; }
-
-  thead tr { border-bottom: 1px solid var(--border2); }
-  th {
-    font-size: 9px; font-weight: 500; color: var(--muted);
-    letter-spacing: .12em; text-transform: uppercase;
-    padding: 9px 12px; text-align: right; white-space: nowrap;
-    cursor: pointer; user-select: none; transition: color .13s;
-  }
-  th:hover { color: var(--text); }
-  th.left { text-align: left; }
-  th.sorted { color: var(--accent); }
-
-  /* Performance section header */
-  th.perf-hdr { border-left: 1px solid var(--border2); color: var(--blue); }
-
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background .1s;
-    animation: fadeUp .3s ease both;
-  }
-  tbody tr:hover { background: var(--s3) !important; }
-
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(5px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
-
-  td { padding: 10px 12px; font-size: 11.5px; text-align: right; white-space: nowrap; }
-  td.left { text-align: left; }
-  td.perf-sep { border-left: 1px solid var(--border2); }
-
-  tr.tier1 { background: #091a14; }
-  tr.tier2 { background: #091222; }
-  tr.tier3 { background: #10102a; }
-  tr.even  { background: var(--s1); }
-  tr.odd   { background: var(--s2); }
-
-  .rank { font-family:'Syne',sans-serif; font-weight:700; font-size:13px; }
-  .r1  { color: var(--gold); }
-  .r2  { color: var(--silver); }
-  .r3  { color: var(--bronze); }
-  .r10 { color: var(--text); }
-  .rn  { color: var(--muted); }
-
-  .ticker { font-family:'Syne',sans-serif; font-weight:700; font-size:13.5px; letter-spacing:.02em; }
-
-  .buy  { display:inline-block; padding:2px 8px; border-radius:3px; font-size:9px; letter-spacing:.1em; font-weight:600; text-transform:uppercase; background:rgba(0,212,168,.1); color:var(--accent); border:1px solid rgba(0,212,168,.22); }
-  .hold { display:inline-block; padding:2px 8px; border-radius:3px; font-size:9px; letter-spacing:.1em; font-weight:600; text-transform:uppercase; background:rgba(245,200,50,.08); color:var(--yellow); border:1px solid rgba(245,200,50,.22); }
-
-  .pill { display:inline-block; padding:2px 8px; border-radius:3px; font-size:9.5px; letter-spacing:.05em; }
-  .p-excelente { background:rgba(0,212,168,.09); color:var(--accent); }
-  .p-alta      { background:rgba(26,159,255,.09); color:var(--blue); }
-  .p-media     { background:rgba(168,126,245,.09); color:var(--purple); }
-  .p-baja      { background:rgba(255,63,98,.08);  color:var(--red); }
-  .p-barata    { background:rgba(0,212,168,.09);  color:var(--accent); }
-  .p-razonable { background:rgba(245,200,50,.08); color:var(--yellow); }
-  .p-cara      { background:rgba(255,63,98,.08);  color:var(--red); }
-  .p-muyfuerte { background:rgba(0,212,168,.12);  color:var(--accent); font-weight:600; }
-  .p-fuerte    { background:rgba(26,159,255,.09); color:var(--blue); }
-  .p-neutro    { background:rgba(255,255,255,.04);color:var(--muted); }
-  .p-debil     { background:rgba(255,63,98,.08);  color:var(--red); }
-  .p-muyalto   { background:rgba(0,212,168,.09);  color:var(--accent); }
-  .p-alto      { background:rgba(26,159,255,.09); color:var(--blue); }
-  .p-medio     { background:rgba(168,126,245,.09);color:var(--purple); }
-  .p-bajo      { background:rgba(255,63,98,.06);  color:var(--muted); }
-
-  .up  { color: var(--accent); }
-  .dn  { color: var(--red); }
-  .neu { color: var(--muted); }
-
-  .score-wrap { display:flex; align-items:center; gap:6px; justify-content:flex-end; }
-  .score-num  { font-family:'Syne',sans-serif; font-weight:700; font-size:14px; min-width:38px; text-align:right; }
-  .score-bar  { width:52px; height:3px; background:var(--border2); border-radius:2px; overflow:hidden; }
-  .score-fill { height:100%; border-radius:2px; }
-
-  .pup  { color: var(--accent); font-size:11px; }
-  .pdn  { color: var(--red);    font-size:11px; }
-  .pneu { color: var(--muted);  font-size:11px; }
-
-  footer {
-    position: sticky; bottom: 0;
-    background: rgba(7,9,14,.96);
-    border-top: 1px solid var(--border);
-    padding: 10px 36px;
-    display: flex; justify-content:space-between; align-items:center;
-  }
-  footer span { font-size:9.5px; color:var(--muted); }
-
-  ::-webkit-scrollbar { width:5px; height:5px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius:3px; }
-
-  /* ── Filter Panel ── */
-  .filter-panel {
-    background: var(--s1);
-    border-bottom: 1px solid var(--border);
-    padding: 0;
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height .3s ease, padding .3s ease;
-  }
-  .filter-panel.open {
-    max-height: 300px;
-    padding: 14px 36px 16px;
-  }
+  /* Filter bar */
+  .filter-bar { background:var(--surface); border-bottom:2px solid var(--border); padding:0 32px; }
   .filter-toggle {
-    padding: 8px 36px;
-    background: var(--s1);
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 10px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .filter-toggle:hover { background: var(--s2); }
-  .filter-toggle-label {
-    font-size: 9.5px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase;
+    display:flex; align-items:center; gap:8px;
+    padding:11px 0; cursor:pointer; user-select:none;
+    border:none; background:none; font-family:'Inter',sans-serif;
   }
   .filter-toggle-icon {
-    font-size: 10px; color: var(--muted); transition: transform .2s;
+    width:20px; height:20px; border-radius:5px;
+    background:var(--surface2); border:1.5px solid var(--border2);
+    display:flex; align-items:center; justify-content:center;
+    font-size:9px; color:var(--muted); transition:all .15s;
   }
-  .filter-toggle.open .filter-toggle-icon { transform: rotate(180deg); color: var(--accent); }
-  .filter-toggle.open .filter-toggle-label { color: var(--accent); }
-  .filter-active-count {
-    font-size: 9px; background: var(--accent); color: var(--bg);
-    border-radius: 8px; padding: 1px 6px; font-weight: 700; display: none;
-  }
-  .filter-active-count.show { display: inline-block; }
+  .filter-toggle.open .filter-toggle-icon { background:var(--accent); border-color:var(--accent); color:white; }
+  .filter-toggle-label { font-size:12px; font-weight:600; color:var(--muted); letter-spacing:.04em; text-transform:uppercase; transition:color .15s; }
+  .filter-toggle:hover .filter-toggle-label, .filter-toggle.open .filter-toggle-label { color:var(--accent); }
+  .filter-active-count { font-size:10px; font-weight:700; background:var(--accent); color:white; border-radius:10px; padding:1px 7px; display:none; }
+  .filter-active-count.show { display:inline-block; }
 
-  .filter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 10px 14px;
-  }
-  .filter-group { display: flex; flex-direction: column; gap: 4px; }
-  .filter-label {
-    font-size: 8.5px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase;
-  }
+  .filter-panel { overflow:hidden; max-height:0; transition:max-height .3s ease, padding .3s ease; padding:0; }
+  .filter-panel.open { max-height:450px; padding-bottom:18px; }
+
+  .filter-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:10px 16px; padding-top:6px; }
+  .filter-group { display:flex; flex-direction:column; gap:4px; }
+  .filter-label { font-size:10px; font-weight:600; color:var(--muted); letter-spacing:.05em; text-transform:uppercase; }
   .filter-input, .filter-select {
-    background: var(--s3);
-    border: 1px solid var(--border2);
-    border-radius: 4px;
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    padding: 5px 8px;
-    outline: none;
-    transition: border-color .13s;
-    width: 100%;
+    background:var(--surface2); border:1.5px solid var(--border); border-radius:6px;
+    color:var(--text); font-family:'Inter',sans-serif; font-size:12px;
+    padding:6px 9px; outline:none; width:100%;
+    transition:border-color .13s, box-shadow .13s;
   }
-  .filter-input:focus, .filter-select:focus { border-color: var(--accent); }
-  .filter-input::placeholder { color: var(--dim); }
-  .filter-select option { background: var(--s3); }
-
-  .filter-row-inline {
-    display: flex; gap: 4px; align-items: center;
-  }
+  .filter-input:focus, .filter-select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(14,168,117,.1); }
+  .filter-input::placeholder { color:var(--dim); }
+  .filter-select option { background:white; }
+  .filter-row-inline { display:flex; gap:4px; align-items:center; }
   .filter-input-min, .filter-input-max {
-    background: var(--s3);
-    border: 1px solid var(--border2);
-    border-radius: 4px;
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    padding: 5px 6px;
-    outline: none;
-    transition: border-color .13s;
-    width: 60px;
+    background:var(--surface2); border:1.5px solid var(--border); border-radius:6px;
+    color:var(--text); font-family:'Inter',sans-serif; font-size:12px;
+    padding:6px 7px; outline:none; width:62px; transition:border-color .13s;
   }
-  .filter-input-min:focus, .filter-input-max:focus { border-color: var(--accent); }
-  .filter-input-min::placeholder, .filter-input-max::placeholder { color: var(--dim); font-size:9px; }
-  .filter-sep { color: var(--dim); font-size: 9px; }
+  .filter-input-min:focus, .filter-input-max:focus { border-color:var(--accent); }
+  .filter-input-min::placeholder, .filter-input-max::placeholder { color:var(--dim); font-size:10px; }
+  .filter-sep { color:var(--dim); font-size:11px; }
+  .filter-footer { display:flex; align-items:center; justify-content:flex-end; margin-top:14px; }
+  .btn-clear { padding:5px 14px; border-radius:6px; font-size:11px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; border:1.5px solid var(--border); background:transparent; color:var(--muted); transition:all .14s; }
+  .btn-clear:hover { border-color:var(--red); color:var(--red); background:rgba(230,49,84,.06); }
 
-  .filter-footer {
-    display: flex; align-items: center; justify-content: flex-end;
-    gap: 8px; margin-top: 12px;
+  /* Table */
+  .wrap { padding:20px 32px 60px; overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; min-width:1520px; }
+  thead tr { background:var(--surface); border-bottom:2px solid var(--border2); }
+  th {
+    font-size:10px; font-weight:600; color:var(--muted);
+    letter-spacing:.06em; text-transform:uppercase;
+    padding:10px 12px; text-align:right; white-space:nowrap;
+    cursor:pointer; user-select:none; position:relative;
+    transition:color .13s, background .13s;
   }
-  .btn-clear-all {
-    padding: 4px 12px; border-radius: 4px; font-size: 9.5px; letter-spacing: .07em;
-    font-family: 'JetBrains Mono', monospace; text-transform: uppercase;
-    cursor: pointer; border: 1px solid var(--border2);
-    background: transparent; color: var(--muted); transition: all .14s;
+  th:hover { color:var(--accent); background:rgba(14,168,117,.04); }
+  th.left { text-align:left; }
+  th.sorted { color:var(--accent); }
+  th.perf-hdr { border-left:2px solid var(--border); color:var(--blue); }
+  th.perf-hdr:hover { color:var(--blue); background:rgba(37,99,235,.04); }
+
+  .th-inner { display:flex; align-items:center; gap:4px; justify-content:flex-end; }
+  th.left .th-inner { justify-content:flex-start; }
+
+  .th-help {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:13px; height:13px; border-radius:50%;
+    background:var(--border2); color:var(--muted);
+    font-size:8px; font-weight:700; flex-shrink:0;
+    transition:background .13s, color .13s;
   }
-  .btn-clear-all:hover { border-color: var(--red); color: var(--red); background: rgba(255,63,98,.07); }
+  th:hover .th-help { background:var(--accent); color:white; }
+
+  .tooltip {
+    position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%);
+    background:#1a2030; color:#eef2ff;
+    font-size:11px; font-weight:400; line-height:1.55;
+    padding:9px 13px; border-radius:8px;
+    width:230px; text-align:left; letter-spacing:0; text-transform:none;
+    pointer-events:none; opacity:0; transition:opacity .15s;
+    z-index:999; white-space:normal;
+    box-shadow:0 4px 18px rgba(0,0,0,.18);
+  }
+  .tooltip::after {
+    content:''; position:absolute; bottom:100%; left:50%; transform:translateX(-50%);
+    border:5px solid transparent; border-bottom-color:#1a2030;
+  }
+  th:hover .tooltip { opacity:1; }
+
+  tbody tr { border-bottom:1px solid var(--border); transition:background .1s; animation:fadeUp .25s ease both; }
+  tbody tr:hover { background:rgba(14,168,117,.05) !important; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+
+  td { padding:10px 12px; font-size:12px; text-align:right; white-space:nowrap; }
+  td.left { text-align:left; }
+  td.perf-sep { border-left:2px solid var(--border); }
+
+  tr.tier1 { background:#f0faf5; }
+  tr.tier2 { background:#f3f7ff; }
+  tr.tier3 { background:#f7f5ff; }
+  tr.even  { background:var(--surface); }
+  tr.odd   { background:var(--bg); }
+
+  .rank { font-weight:700; font-size:13px; }
+  .r1  { color:var(--gold); }
+  .r2  { color:var(--silver); }
+  .r3  { color:var(--bronze); }
+  .r10 { color:var(--text); }
+  .rn  { color:var(--dim); }
+
+  .ticker-cell { display:flex; flex-direction:column; gap:1px; }
+  .ticker  { font-weight:700; font-size:13px; color:var(--text); }
+  .company { font-size:10px; color:var(--muted); font-weight:400; }
+
+  .buy  { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:600; text-transform:uppercase; background:rgba(14,168,117,.1); color:#0a8a5e; border:1px solid rgba(14,168,117,.25); }
+  .hold { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:600; text-transform:uppercase; background:rgba(212,144,10,.1); color:var(--yellow); border:1px solid rgba(212,144,10,.25); }
+
+  .pill { display:inline-block; padding:2px 9px; border-radius:20px; font-size:10px; font-weight:500; }
+  .p-excelente { background:rgba(14,168,117,.1);  color:#0a7a55; border:1px solid rgba(14,168,117,.2); }
+  .p-alta      { background:rgba(37,99,235,.09);  color:#1d4ed8; border:1px solid rgba(37,99,235,.2); }
+  .p-media     { background:rgba(124,58,237,.08); color:#6d28d9; border:1px solid rgba(124,58,237,.2); }
+  .p-baja      { background:rgba(230,49,84,.08);  color:#c0254a; border:1px solid rgba(230,49,84,.2); }
+  .p-barata    { background:rgba(14,168,117,.1);  color:#0a7a55; border:1px solid rgba(14,168,117,.2); }
+  .p-razonable { background:rgba(212,144,10,.09); color:#b57d08; border:1px solid rgba(212,144,10,.2); }
+  .p-cara      { background:rgba(230,49,84,.08);  color:#c0254a; border:1px solid rgba(230,49,84,.2); }
+  .p-muyfuerte { background:rgba(14,168,117,.12); color:#0a7a55; border:1px solid rgba(14,168,117,.25); font-weight:700; }
+  .p-fuerte    { background:rgba(37,99,235,.09);  color:#1d4ed8; border:1px solid rgba(37,99,235,.2); }
+  .p-neutro    { background:var(--surface2);      color:var(--muted); border:1px solid var(--border); }
+  .p-debil     { background:rgba(230,49,84,.08);  color:#c0254a; border:1px solid rgba(230,49,84,.2); }
+  .p-muyalto   { background:rgba(14,168,117,.1);  color:#0a7a55; border:1px solid rgba(14,168,117,.2); }
+  .p-alto      { background:rgba(37,99,235,.09);  color:#1d4ed8; border:1px solid rgba(37,99,235,.2); }
+  .p-medio     { background:rgba(124,58,237,.08); color:#6d28d9; border:1px solid rgba(124,58,237,.2); }
+  .p-bajo      { background:var(--surface2);      color:var(--muted); border:1px solid var(--border); }
+
+  .up  { color:var(--accent); font-weight:500; }
+  .dn  { color:var(--red);    font-weight:500; }
+  .neu { color:var(--muted); }
+  .pup  { color:var(--accent); font-size:11.5px; font-weight:500; }
+  .pdn  { color:var(--red);    font-size:11.5px; font-weight:500; }
+  .pneu { color:var(--muted);  font-size:11.5px; }
+
+  .score-wrap { display:flex; align-items:center; gap:7px; justify-content:flex-end; }
+  .score-num  { font-weight:700; font-size:14px; min-width:40px; text-align:right; }
+  .score-bar  { width:48px; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .score-fill { height:100%; border-radius:2px; }
+
+  footer {
+    position:sticky; bottom:0;
+    background:rgba(255,255,255,.97); border-top:1px solid var(--border);
+    padding:10px 32px; display:flex; justify-content:space-between; align-items:center;
+    box-shadow:0 -1px 4px rgba(0,0,0,.05);
+  }
+  footer span { font-size:11px; color:var(--muted); }
+
+  ::-webkit-scrollbar { width:5px; height:5px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--muted); }
 </style>
 </head>
 <body>
@@ -255,187 +217,229 @@
   </div>
 </header>
 
-<div class="filter-toggle" id="filterToggle" onclick="toggleFilters()">
-  <span class="filter-toggle-icon" id="filterIcon">▼</span>
-  <span class="filter-toggle-label">Filtros</span>
-  <span class="filter-active-count" id="filterCount">0</span>
-</div>
-
-<div class="filter-panel" id="filterPanel">
-  <div class="filter-grid">
-
-    <!-- Ticker -->
-    <div class="filter-group">
-      <span class="filter-label">Ticker</span>
-      <input class="filter-input" id="f-ticker" placeholder="ej. NVDA" oninput="applyAll()">
-    </div>
-
-    <!-- Analistas -->
-    <div class="filter-group">
-      <span class="filter-label">Analistas</span>
-      <select class="filter-select" id="f-anal" onchange="applyAll()">
-        <option value="">Todos</option>
-        <option value="BUY">BUY</option>
-        <option value="HOLD">HOLD</option>
-      </select>
-    </div>
-
-    <!-- Upside potencial -->
-    <div class="filter-group">
-      <span class="filter-label">Upside potencial</span>
-      <select class="filter-select" id="f-upside" onchange="applyAll()">
-        <option value="">Todos</option>
-        <option value="MUY ALTO">Muy Alto</option>
-        <option value="ALTO">Alto</option>
-        <option value="MEDIO">Medio</option>
-        <option value="BAJO">Bajo</option>
-      </select>
-    </div>
-
-    <!-- Calidad -->
-    <div class="filter-group">
-      <span class="filter-label">Calidad</span>
-      <select class="filter-select" id="f-calidad" onchange="applyAll()">
-        <option value="">Todas</option>
-        <option value="EXCELENTE">Excelente</option>
-        <option value="ALTA">Alta</option>
-        <option value="MEDIA">Media</option>
-        <option value="BAJA">Baja</option>
-      </select>
-    </div>
-
-    <!-- Valuación -->
-    <div class="filter-group">
-      <span class="filter-label">Valuación</span>
-      <select class="filter-select" id="f-val" onchange="applyAll()">
-        <option value="">Todas</option>
-        <option value="BARATA">Barata</option>
-        <option value="RAZONABLE">Razonable</option>
-        <option value="CARA">Cara</option>
-      </select>
-    </div>
-
-    <!-- Momentum -->
-    <div class="filter-group">
-      <span class="filter-label">Momentum</span>
-      <select class="filter-select" id="f-mom" onchange="applyAll()">
-        <option value="">Todos</option>
-        <option value="MUY FUERTE">Muy Fuerte</option>
-        <option value="FUERTE">Fuerte</option>
-        <option value="NEUTRO">Neutro</option>
-        <option value="DEBIL">Débil</option>
-      </select>
-    </div>
-
-    <!-- Score -->
-    <div class="filter-group">
-      <span class="filter-label">Score (mín – máx)</span>
-      <div class="filter-row-inline">
-        <input class="filter-input-min" id="f-score-min" placeholder="0" type="number" oninput="applyAll()">
-        <span class="filter-sep">–</span>
-        <input class="filter-input-max" id="f-score-max" placeholder="100" type="number" oninput="applyAll()">
+<div class="filter-bar">
+  <button class="filter-toggle" id="filterToggle" onclick="toggleFilters()">
+    <div class="filter-toggle-icon" id="filterIcon">▼</div>
+    <span class="filter-toggle-label">Filtros</span>
+    <span class="filter-active-count" id="filterCount">0</span>
+  </button>
+  <div class="filter-panel" id="filterPanel">
+    <div class="filter-grid">
+      <div class="filter-group">
+        <span class="filter-label">Ticker / Empresa</span>
+        <input class="filter-input" id="f-ticker" placeholder="ej. NVDA o Apple" oninput="applyAll()">
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Analistas</span>
+        <select class="filter-select" id="f-anal" onchange="applyAll()">
+          <option value="">Todos</option><option value="BUY">BUY</option><option value="HOLD">HOLD</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Upside potencial</span>
+        <select class="filter-select" id="f-upside" onchange="applyAll()">
+          <option value="">Todos</option><option value="MUY ALTO">Muy Alto</option><option value="ALTO">Alto</option><option value="MEDIO">Medio</option><option value="BAJO">Bajo</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Calidad</span>
+        <select class="filter-select" id="f-calidad" onchange="applyAll()">
+          <option value="">Todas</option><option value="EXCELENTE">Excelente</option><option value="ALTA">Alta</option><option value="MEDIA">Media</option><option value="BAJA">Baja</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Valuación</span>
+        <select class="filter-select" id="f-val" onchange="applyAll()">
+          <option value="">Todas</option><option value="BARATA">Barata</option><option value="RAZONABLE">Razonable</option><option value="CARA">Cara</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Momentum</span>
+        <select class="filter-select" id="f-mom" onchange="applyAll()">
+          <option value="">Todos</option><option value="MUY FUERTE">Muy Fuerte</option><option value="FUERTE">Fuerte</option><option value="NEUTRO">Neutro</option><option value="DEBIL">Débil</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Score (mín – máx)</span>
+        <div class="filter-row-inline">
+          <input class="filter-input-min" id="f-score-min" placeholder="0" type="number" oninput="applyAll()">
+          <span class="filter-sep">–</span>
+          <input class="filter-input-max" id="f-score-max" placeholder="100" type="number" oninput="applyAll()">
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Precio $ (mín – máx)</span>
+        <div class="filter-row-inline">
+          <input class="filter-input-min" id="f-precio-min" placeholder="0" type="number" oninput="applyAll()">
+          <span class="filter-sep">–</span>
+          <input class="filter-input-max" id="f-precio-max" placeholder="—" type="number" oninput="applyAll()">
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Up/Down % (mín – máx)</span>
+        <div class="filter-row-inline">
+          <input class="filter-input-min" id="f-updown-min" placeholder="-∞" type="number" oninput="applyAll()">
+          <span class="filter-sep">–</span>
+          <input class="filter-input-max" id="f-updown-max" placeholder="+∞" type="number" oninput="applyAll()">
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">ROIC–WACC % (mín – máx)</span>
+        <div class="filter-row-inline">
+          <input class="filter-input-min" id="f-roic-min" placeholder="-∞" type="number" oninput="applyAll()">
+          <span class="filter-sep">–</span>
+          <input class="filter-input-max" id="f-roic-max" placeholder="+∞" type="number" oninput="applyAll()">
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Fwd P/E (mín – máx)</span>
+        <div class="filter-row-inline">
+          <input class="filter-input-min" id="f-fwdpe-min" placeholder="0" type="number" oninput="applyAll()">
+          <span class="filter-sep">–</span>
+          <input class="filter-input-max" id="f-fwdpe-max" placeholder="—" type="number" oninput="applyAll()">
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">1 Sem % (mín – máx)</span>
+        <div class="filter-row-inline">
+          <input class="filter-input-min" id="f-w1-min" placeholder="-∞" type="number" oninput="applyAll()">
+          <span class="filter-sep">–</span>
+          <input class="filter-input-max" id="f-w1-max" placeholder="+∞" type="number" oninput="applyAll()">
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">1 Mes % (mín – máx)</span>
+        <div class="filter-row-inline">
+          <input class="filter-input-min" id="f-m1-min" placeholder="-∞" type="number" oninput="applyAll()">
+          <span class="filter-sep">–</span>
+          <input class="filter-input-max" id="f-m1-max" placeholder="+∞" type="number" oninput="applyAll()">
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">YTD % (mín – máx)</span>
+        <div class="filter-row-inline">
+          <input class="filter-input-min" id="f-ytd-min" placeholder="-∞" type="number" oninput="applyAll()">
+          <span class="filter-sep">–</span>
+          <input class="filter-input-max" id="f-ytd-max" placeholder="+∞" type="number" oninput="applyAll()">
+        </div>
       </div>
     </div>
-
-    <!-- Precio -->
-    <div class="filter-group">
-      <span class="filter-label">Precio $ (mín – máx)</span>
-      <div class="filter-row-inline">
-        <input class="filter-input-min" id="f-precio-min" placeholder="0" type="number" oninput="applyAll()">
-        <span class="filter-sep">–</span>
-        <input class="filter-input-max" id="f-precio-max" placeholder="—" type="number" oninput="applyAll()">
-      </div>
+    <div class="filter-footer">
+      <button class="btn-clear" onclick="clearAllFilters()">✕ Limpiar filtros</button>
     </div>
-
-    <!-- Up/Down % -->
-    <div class="filter-group">
-      <span class="filter-label">Up/Down % (mín – máx)</span>
-      <div class="filter-row-inline">
-        <input class="filter-input-min" id="f-updown-min" placeholder="-∞" type="number" oninput="applyAll()">
-        <span class="filter-sep">–</span>
-        <input class="filter-input-max" id="f-updown-max" placeholder="+∞" type="number" oninput="applyAll()">
-      </div>
-    </div>
-
-    <!-- ROIC -->
-    <div class="filter-group">
-      <span class="filter-label">ROIC % (mín – máx)</span>
-      <div class="filter-row-inline">
-        <input class="filter-input-min" id="f-roic-min" placeholder="-∞" type="number" oninput="applyAll()">
-        <span class="filter-sep">–</span>
-        <input class="filter-input-max" id="f-roic-max" placeholder="+∞" type="number" oninput="applyAll()">
-      </div>
-    </div>
-
-    <!-- Fwd P/E -->
-    <div class="filter-group">
-      <span class="filter-label">Fwd P/E (mín – máx)</span>
-      <div class="filter-row-inline">
-        <input class="filter-input-min" id="f-fwdpe-min" placeholder="0" type="number" oninput="applyAll()">
-        <span class="filter-sep">–</span>
-        <input class="filter-input-max" id="f-fwdpe-max" placeholder="—" type="number" oninput="applyAll()">
-      </div>
-    </div>
-
-    <!-- Performance 1 Sem -->
-    <div class="filter-group">
-      <span class="filter-label">1 Sem % (mín – máx)</span>
-      <div class="filter-row-inline">
-        <input class="filter-input-min" id="f-w1-min" placeholder="-∞" type="number" oninput="applyAll()">
-        <span class="filter-sep">–</span>
-        <input class="filter-input-max" id="f-w1-max" placeholder="+∞" type="number" oninput="applyAll()">
-      </div>
-    </div>
-
-    <!-- Performance 1 Mes -->
-    <div class="filter-group">
-      <span class="filter-label">1 Mes % (mín – máx)</span>
-      <div class="filter-row-inline">
-        <input class="filter-input-min" id="f-m1-min" placeholder="-∞" type="number" oninput="applyAll()">
-        <span class="filter-sep">–</span>
-        <input class="filter-input-max" id="f-m1-max" placeholder="+∞" type="number" oninput="applyAll()">
-      </div>
-    </div>
-
-    <!-- YTD -->
-    <div class="filter-group">
-      <span class="filter-label">YTD % (mín – máx)</span>
-      <div class="filter-row-inline">
-        <input class="filter-input-min" id="f-ytd-min" placeholder="-∞" type="number" oninput="applyAll()">
-        <span class="filter-sep">–</span>
-        <input class="filter-input-max" id="f-ytd-max" placeholder="+∞" type="number" oninput="applyAll()">
-      </div>
-    </div>
-
-  </div>
-
-  <div class="filter-footer">
-    <button class="btn-clear-all" onclick="clearAllFilters()">✕ Limpiar filtros</button>
   </div>
 </div>
 
 <div class="wrap">
 <table id="tbl">
   <thead><tr>
-    <th class="left"   onclick="sort(0)">#</th>
-    <th class="left"   onclick="sort(1)">Ticker</th>
-    <th                onclick="sort(2)">Precio</th>
-    <th                onclick="sort(3)">Target</th>
-    <th                onclick="sort(4)">Up/Down</th>
-    <th class="left"   onclick="sort(5)">Analistas</th>
-    <th                onclick="sort(6)">Fwd P/E</th>
-    <th                onclick="sort(7)">Fwd PEG</th>
-    <th                onclick="sort(8)">ROIC</th>
-    <th                onclick="sort(9)">Dist MA20</th>
-    <th class="left"   onclick="sort(10)">Upside</th>
-    <th class="left"   onclick="sort(11)">Calidad</th>
-    <th class="left"   onclick="sort(12)">Valuación</th>
-    <th class="left"   onclick="sort(13)">Momentum</th>
-    <th class="sorted" onclick="sort(14)">Score ↓</th>
-    <th class="perf-hdr" onclick="sort(15)">1 Sem</th>
-    <th class="perf-hdr" onclick="sort(16)">1 Mes</th>
-    <th class="perf-hdr" onclick="sort(17)">1 Año</th>
-    <th class="perf-hdr" onclick="sort(18)">YTD</th>
+    <th class="left" onclick="sort(0)">
+      <div class="th-inner"># <span class="th-help">?</span>
+        <div class="tooltip">Ranking del screener ordenado por Score. Posición 1 = la acción con mejor puntuación compuesta.</div>
+      </div>
+    </th>
+    <th class="left" onclick="sort(1)">
+      <div class="th-inner">Ticker <span class="th-help">?</span>
+        <div class="tooltip">Símbolo bursátil y nombre de la empresa.</div>
+      </div>
+    </th>
+    <th onclick="sort(2)">
+      <div class="th-inner"><span class="th-help">?</span>
+        <div class="tooltip">Último precio de cierre en dólares.</div>
+        Precio
+      </div>
+    </th>
+    <th onclick="sort(3)">
+      <div class="th-inner"><span class="th-help">?</span>
+        <div class="tooltip">Precio objetivo promedio según el consenso de analistas que cubren la acción.</div>
+        Target
+      </div>
+    </th>
+    <th onclick="sort(4)">
+      <div class="th-inner"><span class="th-help">?</span>
+        <div class="tooltip">Diferencia % entre precio actual y precio objetivo. Positivo = potencial de suba. Negativo = cotiza sobre el target.</div>
+        Up/Down
+      </div>
+    </th>
+    <th class="left" onclick="sort(5)">
+      <div class="th-inner">Analistas <span class="th-help">?</span>
+        <div class="tooltip">Recomendación promedio del consenso: BUY (comprar) u HOLD (mantener).</div>
+      </div>
+    </th>
+    <th onclick="sort(6)">
+      <div class="th-inner"><span class="th-help">?</span>
+        <div class="tooltip">Forward P/E: precio dividido las ganancias estimadas próximos 12 meses. Menor = más barata en términos de ganancias futuras.</div>
+        Fwd P/E
+      </div>
+    </th>
+    <th onclick="sort(7)">
+      <div class="th-inner"><span class="th-help">?</span>
+        <div class="tooltip">Forward PEG: Fwd P/E dividido la tasa de crecimiento esperada. Menor a 1 indica que la acción está barata relativa a su crecimiento.</div>
+        Fwd PEG
+      </div>
+    </th>
+    <th onclick="sort(8)">
+      <div class="th-inner"><span class="th-help">?</span>
+        <div class="tooltip">ROIC menos WACC: mide si la empresa genera valor. Positivo = rinde más que su costo de capital. Negativo = destruye valor.</div>
+        ROIC–WACC
+      </div>
+    </th>
+    <th onclick="sort(9)">
+      <div class="th-inner"><span class="th-help">?</span>
+        <div class="tooltip">Distancia % del precio actual a su media móvil de 200 días. Positivo = precio sobre la MA200 (tendencia alcista). Negativo = por debajo.</div>
+        Dist MA200
+      </div>
+    </th>
+    <th class="left" onclick="sort(10)">
+      <div class="th-inner">Upside <span class="th-help">?</span>
+        <div class="tooltip">Categoría de potencial de suba al target: MUY ALTO (&gt;30%), ALTO (15–30%), MEDIO (5–15%), BAJO (&lt;5%).</div>
+      </div>
+    </th>
+    <th class="left" onclick="sort(11)">
+      <div class="th-inner">Calidad <span class="th-help">?</span>
+        <div class="tooltip">Calidad del negocio basada en ROIC, ROE y márgenes históricos. EXCELENTE → ALTA → MEDIA → BAJA.</div>
+      </div>
+    </th>
+    <th class="left" onclick="sort(12)">
+      <div class="th-inner">Valuación <span class="th-help">?</span>
+        <div class="tooltip">Nivel de valuación relativo a históricos (P/E, PEG, múltiplos). BARATA = oportunidad de entrada. CARA = prima elevada.</div>
+      </div>
+    </th>
+    <th class="left" onclick="sort(13)">
+      <div class="th-inner">Momentum <span class="th-help">?</span>
+        <div class="tooltip">Impulso de precio y sentimiento. MUY FUERTE = tendencia alcista sólida. DÉBIL = sin impulso o tendencia bajista.</div>
+      </div>
+    </th>
+    <th class="sorted" onclick="sort(14)">
+      <div class="th-inner"><span class="th-help">?</span>
+        <div class="tooltip">Score compuesto (0–100) que combina upside, calidad, valuación, momentum, ROIC y riesgo. Mayor score = oportunidad más atractiva.</div>
+        Score ↓
+      </div>
+    </th>
+    <th class="perf-hdr" onclick="sort(15)">
+      <div class="th-inner"><span class="th-help" style="background:rgba(37,99,235,.15);color:var(--blue)">?</span>
+        <div class="tooltip">Rendimiento de la acción en la última semana.</div>
+        1 Sem
+      </div>
+    </th>
+    <th class="perf-hdr" onclick="sort(16)">
+      <div class="th-inner"><span class="th-help" style="background:rgba(37,99,235,.15);color:var(--blue)">?</span>
+        <div class="tooltip">Rendimiento de la acción en el último mes.</div>
+        1 Mes
+      </div>
+    </th>
+    <th class="perf-hdr" onclick="sort(17)">
+      <div class="th-inner"><span class="th-help" style="background:rgba(37,99,235,.15);color:var(--blue)">?</span>
+        <div class="tooltip">Rendimiento en los últimos 12 meses.</div>
+        1 Año
+      </div>
+    </th>
+    <th class="perf-hdr" onclick="sort(18)">
+      <div class="th-inner"><span class="th-help" style="background:rgba(37,99,235,.15);color:var(--blue)">?</span>
+        <div class="tooltip">Rendimiento acumulado desde el 1 de enero del año en curso.</div>
+        YTD
+      </div>
+    </th>
   </tr></thead>
   <tbody id="tbody"></tbody>
 </table>
@@ -447,6 +451,27 @@
 </footer>
 
 <script>
+const NAMES = {
+  "B.N":"Barrick Mining","LLY.N":"Eli Lilly","MU.O":"Micron Technology",
+  "GEV.N":"GE Vernova","VALE.N":"Vale SA","AMAT.O":"Applied Materials",
+  "PBR.N":"Petrobras","AVGO.O":"Broadcom","NVDA.O":"Nvidia",
+  "ASML.O":"ASML Holding","TSM.N":"Taiwan Semi","GOOGL.O":"Alphabet",
+  "KO.N":"Coca-Cola","PLTR.N":"Palantir","BBD.N":"Banco Bradesco",
+  "NBIS.O":"Nebius Group","AAPL.O":"Apple","AMD.O":"AMD",
+  "XOM.N":"Exxon Mobil","JNJ.N":"Johnson & Johnson","MCD.N":"McDonald's",
+  "GPRK.K":"GeoPark","NFLX.O":"Netflix","V.N":"Visa",
+  "INTC.O":"Intel","NIO.N":"NIO","GE.N":"GE Aerospace",
+  "WMT.N":"Walmart","CAT.N":"Caterpillar","MO.N":"Altria",
+  "META.O":"Meta","MSFT.O":"Microsoft","PEP.O":"PepsiCo",
+  "JPM.N":"JPMorgan Chase","AMZN.O":"Amazon","PFE.N":"Pfizer",
+  "CVX.N":"Chevron","HUT.O":"Hut 8","MELI.O":"MercadoLibre",
+  "ADBE.O":"Adobe","NU.N":"Nu Holdings","QCOM.O":"Qualcomm",
+  "ARM.O":"ARM Holdings","IBM.N":"IBM","UNH.N":"UnitedHealth",
+  "DIS.N":"Walt Disney","BITF.O":"Bitfarms","TSLA.O":"Tesla",
+  "UBER.N":"Uber","BABA.K":"Alibaba","COIN.O":"Coinbase",
+  "BRKb.N":"Berkshire Hathaway","MSTR.O":"Strategy","NKE.N":"Nike",
+};
+
 const RAW = [
   ["B.N",     44.51,  56.67,  27.32,"BUY", 12.33,0.29, 15.47, 25.81,"MUY ALTO","ALTA",      "BARATA",   "FUERTE",     95.22, -1.87,-5.20, 142.69,  4.34],
   ["LLY.N",  981.55,1208.52,  23.12,"BUY", 28.91,0.93, 36.71, 11.70,"ALTO",    "EXCELENTE", "BARATA",   "NEUTRO",     87.63, -0.17,-4.24,  19.43, -9.98],
@@ -476,18 +501,19 @@ const RAW = [
   ["NIO.N",    5.56,   6.56,  18.10,"BUY",  0.00,0.00, 16.65,  3.37,"ALTO",    "ALTA",      "BARATA",   "DEBIL",      54.24, 17.69,12.00,   8.92,  7.25],
   ["GE.N",   306.97, 357.03,  16.31,"BUY", 43.65,2.79, 18.93, 11.49,"ALTO",    "ALTA",      "CARA",     "NEUTRO",     53.82, -6.15,-2.90,  57.37,  5.56],
   ["WMT.N",  125.04, 134.58,   7.63,"BUY", 42.14,3.85,  8.22, 13.05,"MEDIO",   "MEDIA",     "CARA",     "NEUTRO",     53.70,  1.40,-1.31,  46.76, 10.84],
+  ["CAT.N",  701.73, 757.21,   7.91,"BUY", 18.22,1.37, 28.79,  9.93,"MEDIO",   "ALTA",      "CARA",     "NEUTRO",     53.42, -3.59,-5.06,  77.32,  8.58],
+  ["MO.N",    67.54,  73.00,   8.09,"BUY", 10.19,0.49,  6.19,  9.95,"MEDIO",   "MEDIA",     "BARATA",   "NEUTRO",     53.24,  0.38, 6.76,  40.03, 14.72],
   ["META.O", 638.14, 852.79,  33.64,"BUY", 21.96,1.15, 18.90, -5.78,"MUY ALTO","ALTA",      "RAZONABLE","DEBIL",      51.85, -3.40,-4.86,   3.00, -0.75],
-  ["MSFI.O", 402.98, 595.55,  47.79,"BUY", 24.36,1.39, 24.06,-19.59,"MUY ALTO","EXCELENTE", "RAZONABLE","DEBIL",      49.80, -1.83,-2.45,   5.19,-18.28],
+  ["MSFT.O", 402.98, 595.55,  47.79,"BUY", 24.36,1.39, 24.06,-19.59,"MUY ALTO","EXCELENTE", "RAZONABLE","DEBIL",      49.80, -1.83,-2.45,   5.19,-18.28],
   ["PEP.O",  159.16, 170.41,   7.07,"HOLD",18.55,2.94, 13.98,  9.04,"MEDIO",   "ALTA",      "CARA",     "NEUTRO",     49.66, -0.96,-4.86,   7.42, 11.59],
-  ["JPM.N",  282.79, 340.04,  20.25,"BUY", 13.04,1.46, -5.69, -4.60,"ALTO",    "BAJA",      "RAZONABLE","DEBIL",      49.70, -3.69,-11.14,  24.10,-10.77],
+  ["JPM.N",  282.79, 340.04,  20.25,"BUY", 13.04,1.46, -5.69, -4.60,"ALTO",    "BAJA",      "RAZONABLE","DEBIL",      49.70, -3.69,-11.14, 24.10,-10.77],
   ["AMZN.O", 209.75, 279.21,  33.12,"BUY", 27.26,1.62,  7.29, -5.72,"MUY ALTO","MEDIA",     "RAZONABLE","DEBIL",      49.60, -4.19, 1.35,   5.47, -7.87],
   ["PFE.N",   27.00,  28.66,   6.16,"HOLD", 9.16,0.00,  2.58,  7.88,"MEDIO",   "BAJA",      "BARATA",   "NEUTRO",     48.94,  1.45,-2.23,   5.00,  9.64],
   ["CVX.N",  197.40, 189.49,  -4.00,"BUY", 27.43,2.84, -1.17, 17.39,"BAJO",    "BAJA",      "CARA",     "FUERTE",     48.60,  3.91, 8.27,  29.25, 25.84],
-  ["HUT.O",   48.38,  64.07,  32.44,"BUY",  0.00,0.00,-18.30, 28.37,"MUY ALTO","BAJA",      "BARATA",   "FUERTE",     47.16, -5.81,-11.86, 298.15, 11.28],
-  ["MELI.O",1655.51,2668.81,  61.21,"BUY", 33.25,0.94,  4.96,-27.68,"MUY ALTO","BAJA",      "BARATA",   "DEBIL",      45.39, -6.97,-18.22, -17.39,-12.32],
+  ["HUT.O",   48.38,  64.07,  32.44,"BUY",  0.00,0.00,-18.30, 28.37,"MUY ALTO","BAJA",      "BARATA",   "FUERTE",     47.16, -5.81,-11.86,298.15, 11.28],
+  ["MELI.O",1655.51,2668.81,  61.21,"BUY", 33.25,0.94,  4.96,-27.68,"MUY ALTO","BAJA",      "BARATA",   "DEBIL",      45.39, -6.97,-18.22,-17.39,-12.32],
   ["ADBE.O", 269.85, 396.38,  46.89,"BUY", 11.59,0.90, 27.07,-24.93,"MUY ALTO","EXCELENTE", "BARATA",   "DEBIL",      45.14, -4.19, 1.99, -38.46,-21.80],
-  ["WMT.N",  125.02, 134.58,   7.65,"BUY", 42.13,3.85,  8.22,  0.00,"MEDIO",   "MEDIA",     "CARA",     "DEBIL",      44.75,  1.40,-1.37,  46.76,  0.00],
-  ["NU.N",    14.02,  19.60,  39.79,"BUY", 16.19,0.44, -9.52, -4.42,"MUY ALTO","BAJA",      "BARATA",   "DEBIL",      44.45, -5.40,-20.20,  28.74,-13.44],
+  ["NU.N",    14.02,  19.60,  39.79,"BUY", 16.19,0.44, -9.52, -4.42,"MUY ALTO","BAJA",      "BARATA",   "DEBIL",      44.45, -5.40,-20.20, 28.74,-13.44],
   ["QCOM.O", 130.86, 163.83,  25.20,"HOLD",12.02,0.00, 21.18,-19.90,"MUY ALTO","EXCELENTE", "BARATA",   "DEBIL",      39.76, -4.48,-6.59, -14.36,-21.59],
   ["ARM.O",  115.28, 146.21,  26.83,"BUY", 68.77,4.41,  5.90,-15.79,"MUY ALTO","MEDIA",     "CARA",     "DEBIL",      39.01, -4.43,-8.47,   2.29,  9.87],
   ["IBM.N",  246.61, 308.00,  24.89,"BUY", 20.04,2.56,  6.33,-12.40,"ALTO",    "MEDIA",     "CARA",     "DEBIL",      38.66, -3.80,-15.40,  -1.20,-15.98],
@@ -500,185 +526,118 @@ const RAW = [
   ["COIN.O", 193.85, 253.72,  30.88,"BUY", 57.59,3.39, 12.76,-44.89,"MUY ALTO","ALTA",      "CARA",     "DEBIL",      31.70, -5.83,19.20,   1.03,-12.17],
   ["BRKb.N", 492.55, 529.50,   7.50,"BUY", 23.13,9.62, -6.29,  0.36,"MEDIO",   "BAJA",      "CARA",     "DEBIL",      30.95, -1.57,-1.55,  -0.68, -1.81],
   ["MSTR.O", 137.20, 358.31, 161.16,"BUY",  3.33,0.02,-13.83,-98.72,"MUY ALTO","BAJA",      "BARATA",   "DEBIL",      28.76, -1.89, 3.13, -47.76, -8.96],
-  ["NKE.N",   54.30,  76.33,  40.58,"BUY", 35.94,4.50,  4.19,-21.33,"MUY ALTO","BAJA",      "CARA",     "DEBIL",      26.16, -8.41,-13.98, -26.20,-12.57],
+  ["NKE.N",   54.30,  76.33,  40.58,"BUY", 35.94,4.50,  4.19,-21.33,"MUY ALTO","BAJA",      "CARA",     "DEBIL",      26.16, -8.41,-13.98,-26.20,-12.57],
 ];
 
-let filtered = RAW.slice();
-let sortCol = 14, sortDir = -1;
+let filtered=RAW.slice(), sortCol=14, sortDir=-1;
 
-function scoreColor(s){
-  if(s>=80)return'#00d4a8'; if(s>=70)return'#1a9fff';
-  if(s>=60)return'#a87ef5'; if(s>=50)return'#f5c832'; return'#ff3f62';
-}
+function scoreColor(s){ if(s>=80)return'#0ea875'; if(s>=70)return'#2563eb'; if(s>=60)return'#7c3aed'; if(s>=50)return'#d4900a'; return'#e63154'; }
 function perfClass(v){ return v>0?'pup':v<0?'pdn':'pneu'; }
-function perfFmt(v){
-  if(v===null||v===undefined)return'—';
-  return (v>0?'+':'')+v.toFixed(2)+'%';
-}
+function perfFmt(v){ if(v===null||v===undefined)return'—'; return(v>0?'+':'')+v.toFixed(2)+'%'; }
 function pillClass(col,val){
   const v=val.toLowerCase().replace(/ /g,'');
-  const maps={
-    calidad: {excelente:'p-excelente',alta:'p-alta',media:'p-media',baja:'p-baja'},
-    val:     {barata:'p-barata',razonable:'p-razonable',cara:'p-cara'},
-    mom:     {'muyfuerte':'p-muyfuerte',fuerte:'p-fuerte',neutro:'p-neutro',debil:'p-debil'},
-    upside:  {muyalto:'p-muyalto',alto:'p-alto',medio:'p-medio',bajo:'p-bajo'},
-  };
-  return maps[col]?.[v]||'';
+  const m={calidad:{excelente:'p-excelente',alta:'p-alta',media:'p-media',baja:'p-baja'},val:{barata:'p-barata',razonable:'p-razonable',cara:'p-cara'},mom:{'muyfuerte':'p-muyfuerte',fuerte:'p-fuerte',neutro:'p-neutro',debil:'p-debil'},upside:{muyalto:'p-muyalto',alto:'p-alto',medio:'p-medio',bajo:'p-bajo'}};
+  return m[col]?.[v]||'';
 }
 
 function toggleFilters(){
-  const panel = document.getElementById('filterPanel');
-  const toggle = document.getElementById('filterToggle');
-  const icon = document.getElementById('filterIcon');
-  panel.classList.toggle('open');
-  toggle.classList.toggle('open');
+  const p=document.getElementById('filterPanel'), t=document.getElementById('filterToggle');
+  p.classList.toggle('open'); t.classList.toggle('open');
+  document.getElementById('filterIcon').textContent=p.classList.contains('open')?'▲':'▼';
 }
 
-function g(id){ return document.getElementById(id); }
-function val(id){ return g(id)?g(id).value.trim():''; }
-function num(id){ const v=parseFloat(g(id).value); return isNaN(v)?null:v; }
+function g(id){return document.getElementById(id);}
+function val(id){return g(id)?g(id).value.trim():'';}
+function num(id){const v=parseFloat(g(id).value);return isNaN(v)?null:v;}
 
-function countActiveFilters(){
+function countActive(){
   let n=0;
-  const ids=['f-ticker','f-anal','f-upside','f-calidad','f-val','f-mom',
-             'f-score-min','f-score-max','f-precio-min','f-precio-max',
-             'f-updown-min','f-updown-max','f-roic-min','f-roic-max',
-             'f-fwdpe-min','f-fwdpe-max','f-w1-min','f-w1-max',
-             'f-m1-min','f-m1-max','f-ytd-min','f-ytd-max'];
-  ids.forEach(id=>{ if(val(id))n++; });
+  ['f-ticker','f-anal','f-upside','f-calidad','f-val','f-mom','f-score-min','f-score-max','f-precio-min','f-precio-max','f-updown-min','f-updown-max','f-roic-min','f-roic-max','f-fwdpe-min','f-fwdpe-max','f-w1-min','f-w1-max','f-m1-min','f-m1-max','f-ytd-min','f-ytd-max'].forEach(id=>{if(val(id))n++;});
   return n;
 }
 
 function clearAllFilters(){
-  ['f-ticker','f-anal','f-upside','f-calidad','f-val','f-mom',
-   'f-score-min','f-score-max','f-precio-min','f-precio-max',
-   'f-updown-min','f-updown-max','f-roic-min','f-roic-max',
-   'f-fwdpe-min','f-fwdpe-max','f-w1-min','f-w1-max',
-   'f-m1-min','f-m1-max','f-ytd-min','f-ytd-max'].forEach(id=>{
-    const el=g(id); if(!el)return;
-    if(el.tagName==='SELECT') el.selectedIndex=0; else el.value='';
+  ['f-ticker','f-anal','f-upside','f-calidad','f-val','f-mom','f-score-min','f-score-max','f-precio-min','f-precio-max','f-updown-min','f-updown-max','f-roic-min','f-roic-max','f-fwdpe-min','f-fwdpe-max','f-w1-min','f-w1-max','f-m1-min','f-m1-max','f-ytd-min','f-ytd-max'].forEach(id=>{
+    const el=g(id); if(!el)return; if(el.tagName==='SELECT')el.selectedIndex=0; else el.value='';
   });
   applyAll();
 }
 
-function inRange(val, minId, maxId){
-  const mn=num(minId), mx=num(maxId);
-  if(mn!==null && val<mn) return false;
-  if(mx!==null && val>mx) return false;
-  return true;
+function inRange(v,mn,mx){ if(mn!==null&&v<mn)return false; if(mx!==null&&v>mx)return false; return true; }
+
+function applyAll(){
+  const tk=val('f-ticker').toUpperCase(), an=val('f-anal'), up=val('f-upside'), ca=val('f-calidad'), va=val('f-val'), mo=val('f-mom');
+  filtered=RAW.filter(r=>{
+    const sym=r[0].split('.')[0], nm=(NAMES[r[0]]||'').toUpperCase();
+    if(tk&&!sym.includes(tk)&&!nm.includes(tk))return false;
+    if(an&&r[4]!==an)return false;
+    if(up&&r[9]!==up)return false;
+    if(ca&&r[10]!==ca)return false;
+    if(va&&r[11]!==va)return false;
+    if(mo&&r[12]!==mo)return false;
+    if(!inRange(r[13],num('f-score-min'),num('f-score-max')))return false;
+    if(!inRange(r[1],num('f-precio-min'),num('f-precio-max')))return false;
+    if(!inRange(r[3],num('f-updown-min'),num('f-updown-max')))return false;
+    if(!inRange(r[7],num('f-roic-min'),num('f-roic-max')))return false;
+    if(!inRange(r[5],num('f-fwdpe-min'),num('f-fwdpe-max')))return false;
+    if(!inRange(r[14],num('f-w1-min'),num('f-w1-max')))return false;
+    if(!inRange(r[15],num('f-m1-min'),num('f-m1-max')))return false;
+    if(!inRange(r[17],num('f-ytd-min'),num('f-ytd-max')))return false;
+    return true;
+  });
+  const n=countActive(); g('filterCount').textContent=n; g('filterCount').classList.toggle('show',n>0);
+  doSort();
 }
 
+const COL_MAP=[null,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17];
+const ORDERED={9:{'MUY ALTO':0,'ALTO':1,'MEDIO':2,'BAJO':3},10:{'EXCELENTE':0,'ALTA':1,'MEDIA':2,'BAJA':3},11:{'BARATA':0,'RAZONABLE':1,'CARA':2},12:{'MUY FUERTE':0,'FUERTE':1,'NEUTRO':2,'DEBIL':3}};
+
+function doSort(){
+  filtered.sort((a,b)=>{
+    const idx=COL_MAP[sortCol]; if(idx===null)return 0;
+    let va=a[idx],vb=b[idx];
+    if(ORDERED[idx]!==undefined)return sortDir*((ORDERED[idx][va]??99)-(ORDERED[idx][vb]??99));
+    if(typeof va==='string')return sortDir*va.localeCompare(vb);
+    return sortDir*(va-vb);
+  });
+  render();
+}
+
+function sort(col){ if(sortCol===col)sortDir*=-1; else{sortCol=col;sortDir=-1;} doSort(); }
+
 function render(){
-  const tbody=document.getElementById('tbody');
   let html='';
   filtered.forEach((r,i)=>{
     const rank=i+1;
-    const [ticker,precio,target,updown,anal,fwdpe,fwdpeg,roic,ma20,upside,calidad,val,mom,score,w1,m1,y1,ytd]=r;
-    const sc=scoreColor(score);
-    const uc=updown>=0?'up':'dn';
-    const rc=roic>=0?'up':'dn';
-    const mc=ma20>=0?'up':'dn';
+    const [ticker,precio,target,updown,anal,fwdpe,fwdpeg,roic,ma20,upside,calidad,valv,mom,score,w1,m1,y1,ytd]=r;
+    const sc=scoreColor(score), uc=updown>=0?'up':'dn', rc=roic>=0?'up':'dn', mc=ma20>=0?'up':'dn';
     const rankCls=rank===1?'r1':rank===2?'r2':rank===3?'r3':rank<=10?'r10':'rn';
     const rowCls=rank===1?'tier1':rank===2?'tier2':rank===3?'tier3':rank%2===0?'even':'odd';
-
+    const sym=ticker.split('.')[0], company=NAMES[ticker]||'';
     html+=`<tr class="${rowCls}">
       <td class="left"><span class="rank ${rankCls}">${rank}</span></td>
-      <td class="left"><span class="ticker">${ticker.split('.')[0]}</span></td>
+      <td class="left"><div class="ticker-cell"><span class="ticker">${sym}</span>${company?`<span class="company">${company}</span>`:''}</div></td>
       <td>$${precio.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td style="color:var(--muted);font-size:11px">$${target.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+      <td style="color:var(--muted);font-size:11.5px">$${target.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
       <td class="${uc}">${updown>=0?'▲':'▼'} ${Math.abs(updown).toFixed(2)}%</td>
       <td class="left"><span class="${anal==='BUY'?'buy':'hold'}">${anal}</span></td>
-      <td style="color:var(--muted);font-size:11px">${fwdpe===0?'—':fwdpe.toFixed(2)}</td>
-      <td style="color:var(--muted);font-size:11px">${fwdpeg===0?'—':fwdpeg.toFixed(2)}</td>
+      <td style="color:var(--muted);font-size:11.5px">${fwdpe===0?'—':fwdpe.toFixed(2)}</td>
+      <td style="color:var(--muted);font-size:11.5px">${fwdpeg===0?'—':fwdpeg.toFixed(2)}</td>
       <td class="${rc}">${roic.toFixed(2)}%</td>
       <td class="${mc}">${ma20>=0?'+':''}${ma20.toFixed(2)}%</td>
       <td class="left"><span class="pill ${pillClass('upside',upside)}">${upside}</span></td>
       <td class="left"><span class="pill ${pillClass('calidad',calidad)}">${calidad}</span></td>
-      <td class="left"><span class="pill ${pillClass('val',val)}">${val}</span></td>
+      <td class="left"><span class="pill ${pillClass('val',valv)}">${valv}</span></td>
       <td class="left"><span class="pill ${pillClass('mom',mom)}">${mom}</span></td>
-      <td>
-        <div class="score-wrap">
-          <span class="score-num" style="color:${sc}">${score.toFixed(2)}</span>
-          <div class="score-bar"><div class="score-fill" style="width:${score}%;background:${sc}"></div></div>
-        </div>
-      </td>
+      <td><div class="score-wrap"><span class="score-num" style="color:${sc}">${score.toFixed(2)}</span><div class="score-bar"><div class="score-fill" style="width:${score}%;background:${sc}"></div></div></div></td>
       <td class="perf-sep ${perfClass(w1)}">${perfFmt(w1)}</td>
       <td class="${perfClass(m1)}">${perfFmt(m1)}</td>
       <td class="${perfClass(y1)}">${perfFmt(y1)}</td>
       <td class="${perfClass(ytd)}">${perfFmt(ytd)}</td>
     </tr>`;
   });
-  tbody.innerHTML=html;
+  document.getElementById('tbody').innerHTML=html;
   document.getElementById('fcnt').textContent=`Mostrando ${filtered.length} de ${RAW.length} tickers`;
-}
-
-function applyAll(){
-  // [ticker,precio,target,updown,anal,fwdpe,fwdpeg,roic,ma20,upside,calidad,val,mom,score,w1,m1,y1,ytd]
-  //    0      1      2     3     4    5     6      7    8    9      10     11   12   13   14 15  16  17
-  const ticker  = val('f-ticker').toUpperCase();
-  const anal    = val('f-anal');
-  const upside  = val('f-upside');
-  const calidad = val('f-calidad');
-  const valv    = val('f-val');
-  const mom     = val('f-mom');
-
-  filtered = RAW.filter(r=>{
-    if(ticker   && !r[0].split('.')[0].includes(ticker)) return false;
-    if(anal     && r[4]!==anal)    return false;
-    if(upside   && r[9]!==upside)  return false;
-    if(calidad  && r[10]!==calidad) return false;
-    if(valv     && r[11]!==valv)   return false;
-    if(mom      && r[12]!==mom)    return false;
-    if(!inRange(r[13],'f-score-min','f-score-max'))   return false;
-    if(!inRange(r[1], 'f-precio-min','f-precio-max')) return false;
-    if(!inRange(r[3], 'f-updown-min','f-updown-max')) return false;
-    if(!inRange(r[7], 'f-roic-min','f-roic-max'))     return false;
-    if(!inRange(r[5], 'f-fwdpe-min','f-fwdpe-max'))   return false;
-    if(!inRange(r[14],'f-w1-min','f-w1-max'))         return false;
-    if(!inRange(r[15],'f-m1-min','f-m1-max'))         return false;
-    if(!inRange(r[17],'f-ytd-min','f-ytd-max'))       return false;
-    return true;
-  });
-
-  // Update active count badge
-  const n = countActiveFilters();
-  const badge = g('filterCount');
-  badge.textContent = n;
-  badge.classList.toggle('show', n>0);
-
-  doSort();
-}
-
-// th col index → data array index
-const COL_MAP = [null,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17];
-
-// Custom sort orders for categorical columns (data index → rank map)
-const ORDERED = {
-  9:  {'MUY ALTO':0,'ALTO':1,'MEDIO':2,'BAJO':3},        // upside
-  10: {'EXCELENTE':0,'ALTA':1,'MEDIA':2,'BAJA':3},        // calidad
-  11: {'BARATA':0,'RAZONABLE':1,'CARA':2},                // valuacion
-  12: {'MUY FUERTE':0,'FUERTE':1,'NEUTRO':2,'DEBIL':3},   // momentum
-};
-
-function doSort(){
-  filtered.sort((a,b)=>{
-    const idx = COL_MAP[sortCol];
-    if(idx===null) return 0;
-    let va=a[idx], vb=b[idx];
-    if(ORDERED[idx]!==undefined){
-      const ra = ORDERED[idx][va]??99;
-      const rb = ORDERED[idx][vb]??99;
-      return sortDir*(ra-rb);
-    }
-    if(typeof va==='string') return sortDir*va.localeCompare(vb);
-    return sortDir*(va-vb);
-  });
-  render();
-}
-
-function sort(col){
-  if(sortCol===col)sortDir*=-1; else{sortCol=col;sortDir=-1;}
-  doSort();
 }
 
 applyAll();
