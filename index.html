@@ -121,7 +121,7 @@
   th:hover .th-help { background:var(--accent); color:white; }
 
   .tooltip {
-    position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%);
+    position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
     background:#1a2030; color:#eef2ff;
     font-size:11px; font-weight:400; line-height:1.55;
     padding:9px 13px; border-radius:8px;
@@ -131,8 +131,8 @@
     box-shadow:0 4px 18px rgba(0,0,0,.18);
   }
   .tooltip::after {
-    content:''; position:absolute; bottom:100%; left:50%; transform:translateX(-50%);
-    border:5px solid transparent; border-bottom-color:#1a2030;
+    content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    border:5px solid transparent; border-top-color:#1a2030;
   }
   th:hover .tooltip { opacity:1; }
 
@@ -213,7 +213,7 @@
   <div class="logo">Research<em>Desk</em></div>
   <div class="header-right">
     <span class="badge badge-live"><span class="dot"></span>Live</span>
-    <span class="badge badge-n">53 tickers</span>
+    <span class="badge badge-n">54 tickers</span>
   </div>
 </header>
 
@@ -333,11 +333,7 @@
 <div class="wrap">
 <table id="tbl">
   <thead><tr>
-    <th class="left" onclick="sort(0)">
-      <div class="th-inner"># <span class="th-help">?</span>
-        <div class="tooltip">Ranking del screener ordenado por Score. Posición 1 = la acción con mejor puntuación compuesta.</div>
-      </div>
-    </th>
+    <th class="left" onclick="sort(0)"><div class="th-inner">#</div></th>
     <th class="left" onclick="sort(1)">
       <div class="th-inner">Ticker <span class="th-help">?</span>
         <div class="tooltip">Símbolo bursátil y nombre de la empresa.</div>
@@ -473,67 +469,69 @@ const NAMES = {
 };
 
 const RAW = [
-  ["B.N",     44.51,  56.67,  27.32,"BUY", 12.33,0.29, 15.47, 25.81,"MUY ALTO","ALTA",      "BARATA",   "FUERTE",     95.22, -1.87,-5.20, 142.69,  4.34],
-  ["LLY.N",  981.55,1208.52,  23.12,"BUY", 28.91,0.93, 36.71, 11.70,"ALTO",    "EXCELENTE", "BARATA",   "NEUTRO",     87.63, -0.17,-4.24,  19.43, -9.98],
-  ["MU.O",   405.70, 399.39,  -1.56,"BUY", 10.95,0.06, 40.84, 49.03,"BAJO",    "EXCELENTE", "BARATA",   "MUY FUERTE", 87.00,  2.18, 8.69, 324.18, 46.70],
-  ["GEV.N",  830.80, 865.83,   4.22,"BUY", 57.16,0.77, 24.22, 26.48,"BAJO",    "EXCELENTE", "BARATA",   "FUERTE",     81.56,  1.94, 5.06, 178.16, 29.70],
-  ["VALE.N",  15.13,  16.23,   7.24,"BUY",  7.68,0.08,  6.84, 21.75,"MEDIO",   "MEDIA",     "BARATA",   "FUERTE",     78.23, -1.88,-9.62,  63.21, 17.73],
-  ["AMAT.O", 336.83, 407.73,  21.05,"BUY", 31.81,1.53, 19.32, 34.70,"ALTO",    "ALTA",      "RAZONABLE","MUY FUERTE", 76.04, -2.80, 2.36, 125.97, 38.61],
-  ["PBR.N",   19.04,  16.62, -12.70,"BUY",  5.77,0.00,  8.89, 31.81,"BAJO",    "MEDIA",     "BARATA",   "MUY FUERTE", 75.77, 13.78,24.17,  50.24, 60.25],
-  ["AVGO.O", 334.92, 462.72,  38.16,"BUY", 29.66,0.51, 19.22,  5.73,"MUY ALTO","ALTA",      "BARATA",   "NEUTRO",     74.97,  0.67,-1.59,  72.48, -1.31],
-  ["NVDA.O", 182.84, 262.15,  43.37,"BUY", 22.53,0.46, 80.63,  4.99,"MUY ALTO","EXCELENTE", "BARATA",   "DEBIL",      74.90, -0.26,-3.01,  58.00, -0.25],
-  ["ASML.O",1350.56,1359.99,   0.70,"BUY", 40.14,1.69, 33.89, 28.26,"BAJO",    "EXCELENTE", "RAZONABLE","FUERTE",     73.79, -1.29,-4.45,  92.04, 29.61],
-  ["TSM.N",  337.88, 410.08,  21.37,"BUY", 24.55,0.80, 17.81, 22.16,"ALTO",    "ALTA",      "BARATA",   "FUERTE",     69.39, -4.52,-6.64,  90.71, 16.67],
-  ["GOOGL.O",304.31, 359.84,  18.25,"BUY", 26.93,1.99, 27.99, 17.60,"ALTO",    "EXCELENTE", "RAZONABLE","FUERTE",     68.85,  1.15,-4.47,  82.11, -1.37],
-  ["KO.N",    77.82,  83.40,   7.17,"BUY", 24.01,3.28, 27.38,  8.61,"MEDIO",   "EXCELENTE", "CARA",     "NEUTRO",     66.41,  1.03, 1.31,  11.27, 11.04],
-  ["PLTR.N", 153.54, 189.68,  23.53,"BUY",114.07,2.03, 30.13, -7.12,"ALTO",    "EXCELENTE", "CARA",     "DEBIL",      65.95,  0.58,10.07,  83.61,-14.73],
-  ["BBD.N",    3.67,   4.13,  12.40,"BUY",  8.04,0.47, -6.43, 13.88,"MEDIO",   "BAJA",      "BARATA",   "NEUTRO",     61.81, -1.87,-8.25,  83.71, 15.32],
-  ["NBIS.O", 108.06, 140.67,  30.18,"BUY",  0.00,0.00, -9.78, 26.15,"MUY ALTO","BAJA",      "BARATA",   "FUERTE",     60.42, 13.02,17.77, 280.63, 33.80],
-  ["AAPL.O", 255.30, 291.02,  13.99,"BUY", 30.43,2.46, 71.82,  6.18,"MEDIO",   "EXCELENTE", "CARA",     "NEUTRO",     60.30, -1.91,-8.71,  17.67, -4.06],
-  ["AMD.O",  197.55, 280.14,  41.81,"BUY", 31.03,0.51, -0.01,  7.51,"MUY ALTO","BAJA",      "BARATA",   "NEUTRO",     60.22, -0.93,-7.48,  96.05, -4.36],
-  ["XOM.N",  154.00, 147.66,  -4.12,"BUY", 22.32,2.48,  5.03, 20.98,"BAJO",    "MEDIA",     "CARA",     "FUERTE",     59.74,  2.14, 1.58,  41.11, 25.96],
-  ["JNJ.N",  244.09, 236.07,  -3.29,"BUY", 21.07,2.72, 14.28, 21.06,"BAJO",    "ALTA",      "CARA",     "FUERTE",     58.13,  1.86, 2.41,  49.89, 17.41],
-  ["MCD.N",  324.84, 347.41,   6.95,"BUY", 24.56,2.84, 18.27,  5.22,"MEDIO",   "ALTA",      "CARA",     "NEUTRO",     57.90, -0.80,-0.35,   8.50,  6.41],
-  ["GPRK.K",   8.97,  10.47,  16.69,"BUY",  7.25,0.24, 16.61, 16.31,"ALTO",    "ALTA",      "BARATA",   "FUERTE",     56.20,  1.82, 6.79,  12.27, 17.27],
-  ["NFLX.O",  94.58, 114.15,  20.69,"BUY", 30.23,1.34, 19.40,-15.28,"ALTO",    "ALTA",      "RAZONABLE","DEBIL",      55.28, -4.61,15.07,   2.88,  1.21],
-  ["V.N",    307.02, 400.55,  30.46,"BUY", 24.02,1.89, 92.06,-10.56,"MUY ALTO","EXCELENTE", "RAZONABLE","DEBIL",      55.25, -4.00,-6.44,  -7.76,-11.90],
-  ["INTC.O",  45.31,  46.07,   1.70,"HOLD",94.64,1.59, -6.40, 32.38,"BAJO",    "BAJA",      "RAZONABLE","MUY FUERTE", 54.44, -1.39,-3.86, 119.11, 30.03],
-  ["NIO.N",    5.56,   6.56,  18.10,"BUY",  0.00,0.00, 16.65,  3.37,"ALTO",    "ALTA",      "BARATA",   "DEBIL",      54.24, 17.69,12.00,   8.92,  7.25],
-  ["GE.N",   306.97, 357.03,  16.31,"BUY", 43.65,2.79, 18.93, 11.49,"ALTO",    "ALTA",      "CARA",     "NEUTRO",     53.82, -6.15,-2.90,  57.37,  5.56],
-  ["WMT.N",  125.04, 134.58,   7.63,"BUY", 42.14,3.85,  8.22, 13.05,"MEDIO",   "MEDIA",     "CARA",     "NEUTRO",     53.70,  1.40,-1.31,  46.76, 10.84],
-  ["CAT.N",  701.73, 757.21,   7.91,"BUY", 18.22,1.37, 28.79,  9.93,"MEDIO",   "ALTA",      "CARA",     "NEUTRO",     53.42, -3.59,-5.06,  77.32,  8.58],
-  ["MO.N",    67.54,  73.00,   8.09,"BUY", 10.19,0.49,  6.19,  9.95,"MEDIO",   "MEDIA",     "BARATA",   "NEUTRO",     53.24,  0.38, 6.76,  40.03, 14.72],
-  ["META.O", 638.14, 852.79,  33.64,"BUY", 21.96,1.15, 18.90, -5.78,"MUY ALTO","ALTA",      "RAZONABLE","DEBIL",      51.85, -3.40,-4.86,   3.00, -0.75],
-  ["MSFT.O", 402.98, 595.55,  47.79,"BUY", 24.36,1.39, 24.06,-19.59,"MUY ALTO","EXCELENTE", "RAZONABLE","DEBIL",      49.80, -1.83,-2.45,   5.19,-18.28],
-  ["PEP.O",  159.16, 170.41,   7.07,"HOLD",18.55,2.94, 13.98,  9.04,"MEDIO",   "ALTA",      "CARA",     "NEUTRO",     49.66, -0.96,-4.86,   7.42, 11.59],
-  ["JPM.N",  282.79, 340.04,  20.25,"BUY", 13.04,1.46, -5.69, -4.60,"ALTO",    "BAJA",      "RAZONABLE","DEBIL",      49.70, -3.69,-11.14, 24.10,-10.77],
-  ["AMZN.O", 209.75, 279.21,  33.12,"BUY", 27.26,1.62,  7.29, -5.72,"MUY ALTO","MEDIA",     "RAZONABLE","DEBIL",      49.60, -4.19, 1.35,   5.47, -7.87],
-  ["PFE.N",   27.00,  28.66,   6.16,"HOLD", 9.16,0.00,  2.58,  7.88,"MEDIO",   "BAJA",      "BARATA",   "NEUTRO",     48.94,  1.45,-2.23,   5.00,  9.64],
-  ["CVX.N",  197.40, 189.49,  -4.00,"BUY", 27.43,2.84, -1.17, 17.39,"BAJO",    "BAJA",      "CARA",     "FUERTE",     48.60,  3.91, 8.27,  29.25, 25.84],
-  ["HUT.O",   48.38,  64.07,  32.44,"BUY",  0.00,0.00,-18.30, 28.37,"MUY ALTO","BAJA",      "BARATA",   "FUERTE",     47.16, -5.81,-11.86,298.15, 11.28],
-  ["MELI.O",1655.51,2668.81,  61.21,"BUY", 33.25,0.94,  4.96,-27.68,"MUY ALTO","BAJA",      "BARATA",   "DEBIL",      45.39, -6.97,-18.22,-17.39,-12.32],
-  ["ADBE.O", 269.85, 396.38,  46.89,"BUY", 11.59,0.90, 27.07,-24.93,"MUY ALTO","EXCELENTE", "BARATA",   "DEBIL",      45.14, -4.19, 1.99, -38.46,-21.80],
-  ["NU.N",    14.02,  19.60,  39.79,"BUY", 16.19,0.44, -9.52, -4.42,"MUY ALTO","BAJA",      "BARATA",   "DEBIL",      44.45, -5.40,-20.20, 28.74,-13.44],
-  ["QCOM.O", 130.86, 163.83,  25.20,"HOLD",12.02,0.00, 21.18,-19.90,"MUY ALTO","EXCELENTE", "BARATA",   "DEBIL",      39.76, -4.48,-6.59, -14.36,-21.59],
-  ["ARM.O",  115.28, 146.21,  26.83,"BUY", 68.77,4.41,  5.90,-15.79,"MUY ALTO","MEDIA",     "CARA",     "DEBIL",      39.01, -4.43,-8.47,   2.29,  9.87],
-  ["IBM.N",  246.61, 308.00,  24.89,"BUY", 20.04,2.56,  6.33,-12.40,"ALTO",    "MEDIA",     "CARA",     "DEBIL",      38.66, -3.80,-15.40,  -1.20,-15.98],
-  ["UNH.N",  277.89, 364.70,  31.24,"BUY", 16.01,2.16,  5.05,-10.65,"MUY ALTO","MEDIA",     "CARA",     "DEBIL",      37.40, -3.77, 1.71, -42.24,-13.59],
-  ["DIS.N",   99.60, 131.19,  31.72,"BUY", 15.12,1.31, -0.52,-12.07,"MUY ALTO","BAJA",      "RAZONABLE","DEBIL",      37.16, -2.74,-9.42,   0.85,-11.32],
-  ["BITF.O",   2.23,   5.35, 140.25,"BUY",  0.00,0.00,-19.41, -1.14,"MUY ALTO","BAJA",      "BARATA",   "DEBIL",      37.16,  0.23, 1.14,  93.48, -4.68],
-  ["TSLA.O", 397.11, 403.04,   1.49,"HOLD",199.47,8.07,-2.22,  3.72,"BAJO",    "BAJA",      "CARA",     "DEBIL",      36.46, -2.09,-8.62,  60.05, -9.32],
-  ["UBER.N",  72.89, 104.66,  43.58,"BUY", 22.12,5.34, 10.14,-17.75,"MUY ALTO","ALTA",      "CARA",     "DEBIL",      33.99, -3.38,-0.83,   2.37, -8.25],
-  ["BABA.K", 134.12, 197.89,  47.55,"BUY", 23.32,2.98, -6.13, -6.78,"MUY ALTO","BAJA",      "CARA",     "DEBIL",      33.21,  2.88,-19.46,  -1.43, -7.02],
-  ["COIN.O", 193.85, 253.72,  30.88,"BUY", 57.59,3.39, 12.76,-44.89,"MUY ALTO","ALTA",      "CARA",     "DEBIL",      31.70, -5.83,19.20,   1.03,-12.17],
-  ["BRKb.N", 492.55, 529.50,   7.50,"BUY", 23.13,9.62, -6.29,  0.36,"MEDIO",   "BAJA",      "CARA",     "DEBIL",      30.95, -1.57,-1.55,  -0.68, -1.81],
-  ["MSTR.O", 137.20, 358.31, 161.16,"BUY",  3.33,0.02,-13.83,-98.72,"MUY ALTO","BAJA",      "BARATA",   "DEBIL",      28.76, -1.89, 3.13, -47.76, -8.96],
-  ["NKE.N",   54.30,  76.33,  40.58,"BUY", 35.94,4.50,  4.19,-21.33,"MUY ALTO","BAJA",      "CARA",     "DEBIL",      26.16, -8.41,-13.98,-26.20,-12.57],
+  // [ticker, precio, target, updown%, anal, fwdpe, fwdpeg, roic-wacc, distMA200, upside, calidad, valuacion, momentum, score, 1w, 1m, 1y, ytd]
+  ["MU.O",   375.82, 519.37,  38.20,"BUY",  5.92,0.02, 56.53, 25.87,"MUY ALTO","EXCELENTE","BARATA",   "FUERTE",     89.49, -1.79, -9.00, 323.02,  31.48],
+  ["B.N",     42.39,  56.87,  34.16,"BUY", 10.96,0.25, 15.05, 12.81,"MUY ALTO","ALTA",     "BARATA",   "NEUTRO",     89.93,  8.70,-16.20, 115.46,  -2.73],
+  ["GEV.N",  910.86, 880.66,  -3.32,"BUY", 59.41,0.80, 24.07, 24.01,"BAJO",    "EXCELENTE","BARATA",   "FUERTE",     85.45, -1.50,  3.25, 188.26,  39.21],
+  ["LLY.N",  960.96,1201.27,  25.01,"BUY", 26.58,0.85, 36.28,  2.41,"MUY ALTO","EXCELENTE","BARATA",   "DEBIL",      78.96,  6.02, -5.47,  19.51, -10.46],
+  ["VIST.K",  71.23,  81.91,  14.99,"BUY",  7.47,0.43,  7.19, 38.20,"MEDIO",   "MEDIA",    "BARATA",   "MUY FUERTE", 89.93, -0.25, 20.82,  49.04,  46.22],
+  ["XOM.N",  161.25, 155.62,  -3.49,"BUY", 17.26,1.10,  5.18, 28.75,"BAJO",    "MEDIA",    "RAZONABLE","FUERTE",     73.72, -1.11,  4.69,  35.63,  34.16],
+  ["VALE.N",  16.04,  16.50,   2.88,"BUY",  7.94,0.09,  6.44, 21.68,"BAJO",    "MEDIA",    "BARATA",   "FUERTE",     74.98,  5.91, -5.62,  58.76,  23.08],
+  ["PBR.N",   19.88,  18.17,  -8.61,"BUY",  4.64,0.19, 10.75, 36.46,"BAJO",    "ALTA",     "BARATA",   "MUY FUERTE", 73.67,  0.25, 14.72,  37.41,  67.68],
+  ["AVGO.O", 315.04, 466.29,  48.01,"BUY", 27.12,0.47, 18.87, -5.62,"MUY ALTO","ALTA",     "BARATA",   "DEBIL",      73.06, -1.25, -1.25,  86.82,  -9.04],
+  ["GPRK.K",   8.86,  10.47,  18.13,"BUY",  6.56,0.14, 12.14, 23.55,"ALTO",    "ALTA",     "BARATA",   "FUERTE",     70.43, -6.40,  4.18,   9.73,  19.50],
+  ["ASML.O",1382.28,1457.98,   5.48,"BUY", 38.15,1.55, 33.78, 19.85,"MEDIO",   "EXCELENTE","RAZONABLE","FUERTE",     71.92, -0.92, -2.98, 106.96,  29.09],
+  ["NVDA.O", 177.09, 264.57,  49.40,"BUY", 20.95,0.42, 81.13, -2.87,"MUY ALTO","EXCELENTE","BARATA",   "DEBIL",      70.79, -0.91, -2.98,  60.73,  -5.07],
+  ["TSM.N",  348.29, 410.08,  17.74,"BUY", 23.13,0.75, 17.76, 14.03,"ALTO",    "ALTA",     "BARATA",   "NEUTRO",     68.77,  0.12, -5.67, 106.46,  14.57],
+  ["JNJ.N",  245.00, 239.61,  -2.20,"BUY", 21.17,2.70, 14.16, 19.14,"BAJO",    "ALTA",     "CARA",     "FUERTE",     67.09,  2.11, -1.43,  59.87,  18.39],
+  ["AMAT.O", 356.10, 412.88,  15.95,"BUY", 30.95,1.49, 18.96, 26.59,"ALTO",    "ALTA",     "RAZONABLE","FUERTE",     67.42, -3.56, -4.29, 144.54,  38.60],
+  ["GOOGL.O",298.43, 359.29,  20.39,"BUY", 25.09,1.85, 27.64,  7.97,"ALTO",    "EXCELENTE","RAZONABLE","NEUTRO",     65.46,  2.52, -2.70,  89.88,  -4.71],
+  ["NIO.N",    6.12,   6.87,  12.41,"BUY",  0.00,0.00, 17.25,  9.84,"MEDIO",   "ALTA",     "BARATA",   "DEBIL",      67.50,  5.80, 29.56,  58.01,  19.90],
+  ["PLTR.N", 147.94, 189.88,  28.36,"BUY",110.01,1.95, 29.88,-12.01,"MUY ALTO","EXCELENTE","RAZONABLE","DEBIL",      63.41, -4.59,  1.82,  74.63, -16.86],
+  ["CVX.N",  197.14, 198.32,   0.60,"BUY", 18.32,1.16, -1.05, 22.81,"BAJO",    "BAJA",     "RAZONABLE","FUERTE",     61.40, -3.87,  4.01,  17.03,  29.39],
+  ["KO.N",    75.87,  83.57,  10.15,"BUY", 23.55,3.25, 31.86,  6.34,"MEDIO",   "EXCELENTE","CARA",     "NEUTRO",     59.40,  0.84, -6.41,   6.58,   8.54],
+  ["AAPL.O", 254.24, 291.12,  14.51,"BUY", 29.62,2.41, 71.55,  2.06,"MEDIO",   "EXCELENTE","CARA",     "DEBIL",      58.21,  0.59, -4.01,  13.85,  -6.53],
+  ["BBD.N",    3.76,   4.13,   9.85,"BUY",  7.64,0.45, -6.91,  7.26,"MEDIO",   "BAJA",     "BARATA",   "NEUTRO",     57.88,  2.60, -7.97,  67.08,  12.76],
+  ["AMD.O",  213.26, 280.14,  31.36,"BUY", 30.69,0.51, -0.29,  3.50,"MUY ALTO","BAJA",     "BARATA",   "DEBIL",      55.70, -3.24,  7.31, 107.37,  -0.48],
+  ["NBIS.O", 104.52, 165.33,  58.19,"BUY",  0.00,0.00, -9.53, 14.53,"MUY ALTO","BAJA",     "BARATA",   "NEUTRO",     55.05, -9.31, 14.68, 359.98,  24.69],
+  ["GE.N",   294.67, 355.08,  20.50,"BUY", 37.84,2.38, 18.44, -3.18,"ALTO",    "ALTA",     "CARA",     "NEUTRO",     54.05, -0.68,-14.81,  44.53,  -4.38],
+  ["V.N",    299.40, 396.75,  32.51,"BUY", 23.49,1.84, 91.86,-11.62,"MUY ALTO","EXCELENTE","RAZONABLE","DEBIL",      52.90, -1.82, -6.60, -13.57, -14.64],
+  ["NFLX.O",  95.31, 114.38,  20.01,"BUY", 30.37,1.32, 19.16,-11.78,"ALTO",    "ALTA",     "RAZONABLE","DEBIL",      52.26,  3.26, -1.88,   2.64,   1.63],
+  ["MCD.N",  306.76, 346.68,  13.01,"BUY", 23.49,2.73, 17.14,  0.72,"MEDIO",   "ALTA",     "CARA",     "DEBIL",      52.92, -1.63, -8.42,  -2.23,   0.33],
+  ["ADBE.O", 242.92, 324.77,  33.69,"BUY", 10.28,0.81, 27.36,-35.50,"MUY ALTO","EXCELENTE","BARATA",   "DEBIL",      51.61,  2.31, -6.96, -36.66, -30.65],
+  ["INTC.O",  48.40,  46.07,  -4.80,"HOLD",86.16,1.43, -6.70, 18.86,"BAJO",    "BAJA",     "RAZONABLE","FUERTE",     50.06,  2.54,  6.33, 119.41,  31.11],
+  ["PFE.N",   28.30,  28.80,   1.76,"HOLD", 9.42,0.00,  2.53,  9.41,"BAJO",    "BAJA",     "BARATA",   "NEUTRO",     49.14,  3.81,  3.89,  15.40,  13.73],
+  ["ARM.O",  153.36, 160.63,   4.74,"BUY", 86.36,5.11,  5.39,  8.36,"BAJO",    "MEDIA",    "CARA",     "NEUTRO",     52.12, -2.34, 23.33,  43.38,  40.33],
+  ["MSFT.O", 372.41, 591.14,  58.73,"BUY", 22.28,1.27, 23.73,-28.95,"MUY ALTO","EXCELENTE","RAZONABLE","DEBIL",      48.90,  0.30, -6.62,  -2.62, -23.05],
+  ["WMT.O",  123.94, 134.90,   8.85,"BUY", 42.42,3.91,  8.03, 12.37,"MEDIO",   "MEDIA",    "CARA",     "NEUTRO",     46.14,  null,  null,   null,   null],
+  ["META.O", 585.66, 854.10,  45.84,"BUY", 19.06,0.98, 18.46,-19.48,"MUY ALTO","ALTA",     "BARATA",   "DEBIL",      49.17, -1.69,-10.52,  -0.20, -11.40],
+  ["AMZN.O", 212.81, 279.52,  31.35,"BUY", 26.61,1.56,  7.05, -7.67,"MUY ALTO","MEDIA",    "RAZONABLE","DEBIL",      46.94,  null,  null,   null,   null],
+  ["PEP.O",  154.00, 170.20,  10.52,"HOLD",17.99,2.87, 13.75,  5.13,"MEDIO",   "ALTA",     "CARA",     "NEUTRO",     44.67,  null,  null,   null,   null],
+  ["JPM.N",  297.02, 333.48,  12.28,"BUY", 13.55,1.61, -5.81, -2.68,"MEDIO",   "BAJA",     "RAZONABLE","DEBIL",      46.76,  0.57, -0.15,  21.93,  -7.80],
+  ["HUT.O",   49.23,  64.87,  31.78,"BUY",  0.00,0.00,-18.97, 14.66,"MUY ALTO","BAJA",     "BARATA",   "NEUTRO",     44.83,  null,  null,   null,   null],
+  ["NU.N",    14.63,  19.62,  34.13,"BUY", 16.15,0.45, -9.93, -6.02,"MUY ALTO","BAJA",     "BARATA",   "DEBIL",      42.05,  2.16, -3.69,  40.27, -12.60],
+  ["IBM.N",  246.03, 305.00,  23.97,"BUY", 19.51,2.49,  6.24,-14.44,"ALTO",    "MEDIA",    "CARA",     "DEBIL",      40.64,  1.86,  2.72,  -1.79, -16.99],
+  ["MELI.O",1719.87,2555.89,  48.61,"BUY", 33.90,1.00, 11.57,-25.35,"MUY ALTO","ALTA",     "RAZONABLE","DEBIL",      42.32,  4.85, -3.26, -10.23, -14.66],
+  ["WMT.N",  123.92, 134.90,   8.86,"BUY", 42.42,3.91,  8.03,  0.00,"MEDIO",   "MEDIA",    "CARA",     "DEBIL",      38.36,  0.68, -2.51,   0.00,  11.19],
+  ["UBER.N",  72.61, 104.30,  43.66,"BUY", 21.21,4.83,  9.95,-20.82,"MUY ALTO","MEDIA",    "CARA",     "DEBIL",      38.71, -0.78, -4.53,  -0.66, -11.26],
+  ["QCOM.O", 129.42, 159.84,  23.51,"HOLD",11.56,0.00, 20.85,-23.11,"ALTO",    "EXCELENTE","BARATA",   "DEBIL",      38.21, -0.71, -8.23, -15.44, -24.34],
+  ["UNH.N",  273.46, 362.23,  32.46,"BUY", 15.19,1.85,  4.83,-15.48,"MUY ALTO","BAJA",     "RAZONABLE","DEBIL",      39.39,  1.06, -7.30, -47.74, -17.18],
+  ["COIN.O", 174.88, 250.30,  43.12,"BUY", 50.85,2.91, 12.29,-60.91,"MUY ALTO","ALTA",     "CARA",     "DEBIL",      36.22,  null,  null,   null,   null],
+  ["BITF.O",   1.97,   5.64, 186.96,"BUY",  0.00,0.00,  0.00,-20.46,"MUY ALTO","BAJA",     "BARATA",   "DEBIL",      39.06, -null,  null,   null,   null],
+  ["DIS.N",   97.11, 129.60,  33.46,"BUY", 14.46,1.27, -0.71,-15.82,"MUY ALTO","BAJA",     "RAZONABLE","DEBIL",      32.31,  1.27, -6.86,  -0.52, -14.59],
+  ["TSLA.O", 381.79, 402.87,   5.52,"HOLD",184.17,7.47,-2.65, -6.48,"MEDIO",   "BAJA",     "CARA",     "DEBIL",      33.08,  null,  null,   null,   null],
+  ["BRKb.N", 479.26, 529.50,  10.48,"BUY", 22.96,8.26, -6.49, -2.40,"MEDIO",   "BAJA",     "CARA",     "DEBIL",      31.57,  0.67, -0.16, -10.06,  -4.63],
+  ["BABA.K", 124.06, 186.11,  50.02,"BUY", 25.20,6.12, -2.11,-16.69,"MUY ALTO","BAJA",     "CARA",     "DEBIL",      30.96,  null,  null,   null,   null],
+  ["NKE.N",   45.13,  68.15,  51.02,"BUY", 34.41,0.00,  3.62,-30.65,"MUY ALTO","BAJA",     "BARATA",   "DEBIL",      42.68,-14.81,-26.02, -30.30, -29.16],
+  ["MSTR.O", 123.20, 346.18, 180.99,"BUY",  3.36,0.02,-14.34,-107.25,"MUY ALTO","BAJA",    "BARATA",   "DEBIL",      20.72,  null,  null,   null,   null],
 ];
 
 let filtered=RAW.slice(), sortCol=14, sortDir=-1;
 
 function scoreColor(s){ if(s>=80)return'#0ea875'; if(s>=70)return'#2563eb'; if(s>=60)return'#7c3aed'; if(s>=50)return'#d4900a'; return'#e63154'; }
 function perfClass(v){ return v>0?'pup':v<0?'pdn':'pneu'; }
-function perfFmt(v){ if(v===null||v===undefined)return'—'; return(v>0?'+':'')+v.toFixed(2)+'%'; }
+function perfFmt(v){ if(v===null||v===undefined||isNaN(v))return'—'; return(v>0?'+':'')+v.toFixed(2)+'%'; }
+function perfClassSafe(v){ if(v===null||v===undefined||isNaN(v))return'pneu'; return v>0?'pup':v<0?'pdn':'pneu'; }
 function pillClass(col,val){
   const v=val.toLowerCase().replace(/ /g,'');
   const m={calidad:{excelente:'p-excelente',alta:'p-alta',media:'p-media',baja:'p-baja'},val:{barata:'p-barata',razonable:'p-razonable',cara:'p-cara'},mom:{'muyfuerte':'p-muyfuerte',fuerte:'p-fuerte',neutro:'p-neutro',debil:'p-debil'},upside:{muyalto:'p-muyalto',alto:'p-alto',medio:'p-medio',bajo:'p-bajo'}};
@@ -630,10 +628,10 @@ function render(){
       <td class="left"><span class="pill ${pillClass('val',valv)}">${valv}</span></td>
       <td class="left"><span class="pill ${pillClass('mom',mom)}">${mom}</span></td>
       <td><div class="score-wrap"><span class="score-num" style="color:${sc}">${score.toFixed(2)}</span><div class="score-bar"><div class="score-fill" style="width:${score}%;background:${sc}"></div></div></div></td>
-      <td class="perf-sep ${perfClass(w1)}">${perfFmt(w1)}</td>
-      <td class="${perfClass(m1)}">${perfFmt(m1)}</td>
-      <td class="${perfClass(y1)}">${perfFmt(y1)}</td>
-      <td class="${perfClass(ytd)}">${perfFmt(ytd)}</td>
+      <td class="perf-sep ${perfClassSafe(w1)}">${perfFmt(w1)}</td>
+      <td class="${perfClassSafe(m1)}">${perfFmt(m1)}</td>
+      <td class="${perfClassSafe(y1)}">${perfFmt(y1)}</td>
+      <td class="${perfClassSafe(ytd)}">${perfFmt(ytd)}</td>
     </tr>`;
   });
   document.getElementById('tbody').innerHTML=html;
